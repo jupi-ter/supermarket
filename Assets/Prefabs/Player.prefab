@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1812681688115620109}
   - component: {fileID: 9207915235617831079}
   - component: {fileID: 2515837147636133151}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PlayerCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -31,7 +31,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0.546, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 8871757284469366591}
   m_Father: {fileID: 6995120465737982461}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &1812681688115620109
@@ -92,7 +93,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2538304232744779371}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &2515837147636133151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,7 +154,7 @@ GameObject:
   - component: {fileID: 1914054502613108967}
   - component: {fileID: 5928893253748286753}
   - component: {fileID: 8563935189143220578}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -174,7 +175,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8310344261770013562}
-  - {fileID: 8871757284469366591}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7778237501865926922
@@ -324,11 +324,11 @@ MonoBehaviour:
   gravity: 10
   lookSpeed: 2
   lookXLimit: 45
-  holdObjectTransform: {fileID: 0}
+  heldObjectTransform: {fileID: 8871757284469366591}
   pickupDistance: 3
   pickupLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 55
 --- !u!114 &8563935189143220578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -384,7 +384,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8871757284469366591}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ItemHoldPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -399,10 +399,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8336097049137126127}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 1.16}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.046000004, z: 1.16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6995120465737982461}
+  m_Father: {fileID: 8310344261770013562}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
