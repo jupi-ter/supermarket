@@ -24,6 +24,7 @@ public class PlayerController : NetworkBehaviour
     private bool canPickup = true;
 
     private IPickupable currentPickupable;
+    private NetworkObject heldNetworkObject;
 
     public override void OnNetworkSpawn()
     {
@@ -74,17 +75,69 @@ public class PlayerController : NetworkBehaviour
 
     void DropItem()
     {
-        currentPickupable.OnDrop();
-        areHandsBusy = false;
+        if (currentPickupable != null)
+        {
+            DropItemServerRpc(heldNetworkObject.NetworkObjectId);
+            areHandsBusy = false;
+        }
+    }
+
+    [ServerRpc]
+    void DropItemServerRpc(ulong objectId)
+    {
+        DropItemClientRpc(objectId);
+    }
+
+    [ClientRpc]
+    void DropItemClientRpc(ulong objectId)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectId, out var obj))
+        {
+            if (obj.TryGetComponent(out IPickupable pickupable))
+            {
+                pickupable.OnDrop();
+                heldNetworkObject = null;
+            }
+        }
     }
 
     void PickupItem()
     {
         if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit raycastHit, pickupDistance, pickupLayerMask))
         {
-            if (raycastHit.transform.TryGetComponent(out IPickupable pickupable))
+            if (raycastHit.transform.TryGetComponent(out NetworkObject netObj))
+            {
+                PickupItemServerRpc(netObj.NetworkObjectId);
+            }
+        }
+    }
+
+    [ServerRpc]
+    void PickupItemServerRpc(ulong objectId, ServerRpcParams rpcParams = default)
+    {
+        NetworkObject obj = NetworkManager.Singleton.SpawnManager.SpawnedObjects[objectId];
+
+        if (obj.TryGetComponent(out IPickupable pickupable))
+        {
+            // Transfer ownership
+            obj.ChangeOwnership(OwnerClientId);
+
+            // Call pickup on client that owns it now
+            PickupItemClientRpc(objectId, OwnerClientId);
+        }
+    }
+
+    [ClientRpc]
+    void PickupItemClientRpc(ulong objectId, ulong newOwnerId)
+    {
+        if (NetworkManager.Singleton.LocalClientId != newOwnerId) return;
+
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectId, out var obj))
+        {
+            if (obj.TryGetComponent(out IPickupable pickupable))
             {
                 currentPickupable = pickupable;
+                heldNetworkObject = pickupable.GetNetworkObject();
                 pickupable.OnPickup(heldObjectTransform);
                 areHandsBusy = true;
             }

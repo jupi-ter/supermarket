@@ -14,6 +14,7 @@ public interface IPickupable
     void OnPickup(Transform holdTransform);
     void OnDrop();
     bool CanPickup();
+    NetworkObject GetNetworkObject();
 }
 
 public class GroceryData : INetworkSerializable, IEquatable<GroceryData>
@@ -46,12 +47,11 @@ public class GroceryItem : NetworkBehaviour, IPickupable
         networkObject = transform.GetComponent<NetworkObject>();
     }
 
-    public void FixedUpdate()
+    void FixedUpdate()
     {
-        if (holdTransform != null)
-        {
-            rb.MovePosition(holdTransform.position);
-        }
+        if (!IsOwner || holdTransform == null) return;
+
+        rb.MovePosition(holdTransform.position);
     }
 
     public void OnPickup(Transform holdTransform)
@@ -71,5 +71,10 @@ public class GroceryItem : NetworkBehaviour, IPickupable
     public bool CanPickup()
     {
         return true;
+    }
+
+    public NetworkObject GetNetworkObject()
+    {
+        return networkObject;
     }
 }
