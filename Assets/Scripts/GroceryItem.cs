@@ -44,6 +44,8 @@ public class GroceryItem : NetworkBehaviour, IPickupable
 
     public override void OnNetworkSpawn()
     {
+        Data.Value.Name = Name;
+
         networkObject = transform.GetComponent<NetworkObject>();
     }
 
